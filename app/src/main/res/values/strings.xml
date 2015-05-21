@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">DemoCamera</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="make_pic">照相</string>
+    <string name="get_pic">讀檔</string>
+</resources>

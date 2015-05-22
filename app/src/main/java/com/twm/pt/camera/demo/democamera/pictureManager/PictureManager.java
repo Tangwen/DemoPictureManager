@@ -1,14 +1,17 @@
 package com.twm.pt.camera.demo.democamera.pictureManager;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.View;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -31,7 +34,7 @@ public class PictureManager {
     private int aspectX=1, aspectY=1, outputX=300, outputY=300;
     private boolean needCut = true;
 
-    private String TAG = "PictureManager";
+    private static final String TAG = "PictureManager";
 
     public static PictureManager getInstance(Activity mActivity) {
         if(mPictureManager==null) {
@@ -138,7 +141,7 @@ public class PictureManager {
         return photoBitmap;
     }
 
-    private boolean saveBitmapToFile(Bitmap photoBitmap, File saveFile) {
+    public static boolean saveBitmapToFile(Bitmap photoBitmap, File saveFile) {
         if(photoBitmap!=null && saveFile!=null) {
             try {
                 BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(saveFile));
@@ -150,7 +153,7 @@ public class PictureManager {
                 Log.e(TAG, "Save file error!");
                 return false;
             }
-            Log.d(null, "Save file ok!");
+            Log.d(TAG, "Save file ok!");
             return true;
         }
         return false;
@@ -170,6 +173,26 @@ public class PictureManager {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    public static Bitmap screenShot(View view) {
+        Bitmap bitmap = Bitmap.createBitmap(view.getWidth(),
+                view.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        view.draw(canvas);
+        return bitmap;
+    }
+
+
+    public static void shareURI(Context mContext, Uri uri) {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_SEND);
+        intent.setType("image/*");
+
+        intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "");
+        intent.putExtra(android.content.Intent.EXTRA_TEXT, "");
+        intent.putExtra(Intent.EXTRA_STREAM, uri);
+        mContext.startActivity(Intent.createChooser(intent, "Share Cover Image"));
     }
 
 
